@@ -24,17 +24,15 @@ def fetch_team_stats(team_name, sport_type):
           "Toplam Şut": random.randint(10, 22),
           "İsabetli Şut": random.randint(3, 10),
           "Kale Vuruşu (Aut)": random.randint(5, 12),
-          "2.5 Alt/Üst": (
-              "Üst" if random.random() > 0.4 else "Alt"
-          ),  # Futbol için alt/üst
+          "2.5 Alt/Üst": "Üst" if random.random() > 0.4 else "Alt",
       }
     elif sport_type == "Basketbol":
       match = {
           "Maç": f"Maç {i}",
           "Yer": "İç Saha" if i % 2 != 0 else "Dış Saha",
           "Atılan Gol/Sayı": random.randint(75, 115),
-          "Korner": "Yok",  # Basketbolda korner yok
-          "Toplam Şut": random.randint(60, 90),  # Şut yerine şut atma girişimi
+          "Korner": "Yok",
+          "Toplam Şut": random.randint(60, 90),
           "İsabetli Şut": random.randint(25, 45),
           "Kale Vuruşu (Aut)": "Yok",
           "2.5 Alt/Üst": (
@@ -85,13 +83,11 @@ if submitted:
         f"{team1} ve {team2} için internet verileri taranıyor ve son 3 maç"
         " analiz ediliyor..."
     ):
-      # Verileri simüle et / çek
       t1_data = fetch_team_stats(team1, sport_type)
       t2_data = fetch_team_stats(team2, sport_type)
 
     st.success("Analiz tamamlandı!")
 
-    # Sonuçları Göster
     col_a, col_b = st.columns(2)
 
     with col_a:
@@ -99,7 +95,6 @@ if submitted:
       df1 = pd.DataFrame(t1_data)
       st.dataframe(df1, use_container_width=True)
 
-      # Özet Metrikler
       if sport_type == "Futbol":
         avg_goals = sum([x["Atılan Gol/Sayı"] for x in t1_data]) / 3
         avg_corners = sum([x["Korner"] for x in t1_data]) / 3
@@ -113,7 +108,6 @@ if submitted:
       df2 = pd.DataFrame(t2_data)
       st.dataframe(df2, use_container_width=True)
 
-      # Özet Metrikler
       if sport_type == "Futbol":
         avg_goals_2 = sum([x["Atılan Gol/Sayı"] for x in t2_data]) / 3
         avg_corners_2 = sum([x["Korner"] for x in t2_data]) / 3
@@ -126,7 +120,8 @@ if submitted:
     st.markdown("### 📊 Yapay Zeka Karşılaştırma Özeti")
     st.write(
         f"Yapılan son 3 maçlık otomatik tarama sonucuna göre; **{team1}** ve"
-        f" **{team2**} takımlarının hücum hattı performansları incelendi."
-        " Özellikle iç/dış saha form durumları göz önüne alındığında maçın"
+        f" **{team2}** takımlarının hücum hattı performansları incelendi."
+        " Özellikle iç/dış saha form durumları göz önüne alınarak maçın"
         " çekişmeli geçmesi bekleniyor."
     )
+
