@@ -10,13 +10,9 @@ st.set_page_config(
 )
 
 
-# Ücretsiz ve açık kaynaklı futbol verilerini sunan public API üzerinden gerçek maçları çeken fonksiyon
+# Gerçek futbol verilerini çeken fonksiyon
 def fetch_real_football_data(team_name):
   cleaned_name = team_name.strip().lower()
-
-  # Açık futbol veritabanı uç noktası (Public API)
-  # Bu servis dünyadaki major liglerin son maçlarını ve skorlarını açık olarak sunar
-  url = "https://raw.githubusercontent.com/openfootball/football.json/master/2023-24/en.1.json"
 
   try:
     response = requests.get(
@@ -24,7 +20,6 @@ def fetch_real_football_data(team_name):
         timeout=5,
     )
     if response.status_code != 200:
-      # Alternatif sezon verisi
       response = requests.get(
           "https://raw.githubusercontent.com/openfootball/football.json/master/2024-25/en.1.json",
           timeout=5,
@@ -46,7 +41,7 @@ def fetch_real_football_data(team_name):
         is_home = cleaned_name in home
         opponent = m.get("team2") if is_home else m.get("team1")
         scored = h_ft if is_home else a_ft
-conced = a_ft if is_home else h_ft
+        conced = a_ft if is_home else h_ft
 
         team_matches.append({
             "Maç Tarihi": m.get("date", "Bilinmiyor"),
@@ -56,7 +51,6 @@ conced = a_ft if is_home else h_ft
             "Yenilen Gol": conced if conced is not None else 0,
         })
 
-    # Eğer açık veritabanında maç bulunduysa son 3 maçı döndür
     if team_matches:
       return team_matches[-3:]
 
@@ -92,7 +86,6 @@ if submitted:
       t1_matches = fetch_real_football_data(team1)
       t2_matches = fetch_real_football_data(team2)
 
-    # Eğer gerçek veritabanında bulunamazsa kullanıcıya net hata ver (Uydurma sonuç göstermez)
     if not t1_matches:
       st.error(
           f"'{team1}' için internet üzerinde güncel resmi maç verisi"
@@ -102,7 +95,7 @@ if submitted:
     elif not t2_matches:
       st.error(
           f"'{team2}' için internet üzerinde güncel resmi maç verisi"
-          " bulanamadı! Lütfen İngilizce tam adını yazın."
+          " bulunamadı! Lütfen İngilizce tam adını yazın."
       )
     else:
       st.success("Gerçek maç verileri başarıyla çekildi!")
